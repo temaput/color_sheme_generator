@@ -11,12 +11,19 @@ Tests for `color_scheme_generator` module.
 
 import sys
 import unittest
+import doctest
 from contextlib import contextmanager
 from click.testing import CliRunner
 
 from color_scheme_generator import color_scheme_generator
 from color_scheme_generator import cli
+from color_scheme_generator import utils
 
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(utils))
+    tests.addTests(doctest.DocTestSuite(color_scheme_generator))
+    return tests
 
 
 class TestColor_scheme_generator(unittest.TestCase):
