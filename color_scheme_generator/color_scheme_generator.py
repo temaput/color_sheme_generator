@@ -3,7 +3,12 @@
 
 from colorsys import hsv_to_rgb, rgb_to_hsv
 from .utils import hex_to_rgb, rgb_to_hex
-from .constants import RGB_tuple, HSV_tuple
+from .constants import (
+    RGB_tuple,
+    HSV_tuple,
+    SCHEMES,
+    PRESETS,
+)
 
 
 class Color:
@@ -59,6 +64,45 @@ class Color:
         return self.__hsv
 
 
-def generate_palette(hsv=HSV_tuple(0, 1, 1), scheme='mono', preset='pastel'):
-    return (
+def generate_from_scheme(color, scheme):
+    scheme = SCHEMES[scheme]
+    yield color
+
+
+def generate_from_preset(color, preset):
+    for saturation_ratio, value_ratio in PRESETS[preset]:
+        hue, saturation, value = color.hsv
+        yield Color(hsv=HSV_tuple(
+            hue,
+            saturation*saturation_ratio,
+            value*value_ratio
+        ))
+
+
+class Palette:
+    def __init__(self, palette):
+        self.__palette = palette
+
+    def print_hex_values(self):
+        for tones in self.__palette:
+            for color in tones:
+                print(color.hex)
+
+
+def generate_palette(color, scheme='mono', preset='pastel'):
+    """
+    Generates color scheme from given parameters
+    >>> cs = generate_palette(Color())
+    >>> cs.print_hex_values()
+    '#550000'
+    '#801515'
+    '#AA3939'
+    '#D46A6A'
+    '#FFAAAA'
+    """
+
+    palette = (
+        (tone for tone in generate_from_preset(base_color, preset))
+        for base_color in generate_from_scheme(color, scheme)
     )
+    return Palette(palette)
