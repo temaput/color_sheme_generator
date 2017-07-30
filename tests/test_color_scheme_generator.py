@@ -18,11 +18,13 @@ from click.testing import CliRunner
 from color_scheme_generator import color_scheme_generator
 from color_scheme_generator import cli
 from color_scheme_generator import utils
+from color_scheme_generator import paletton
 
 
 def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(utils))
     tests.addTests(doctest.DocTestSuite(color_scheme_generator))
+    tests.addTests(doctest.DocTestSuite(paletton))
     return tests
 
 
